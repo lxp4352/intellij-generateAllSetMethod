@@ -231,8 +231,14 @@ public abstract class GenerateAllSetterBase extends PsiElementBaseIntentionActio
         Set<String> importList = Sets.newHashSet();
         String generateName = PsiToolUtils.lowerStart(psiClass.getName());
         GetInfo info = getGetInfo(parameters);
+        String insertText = "";
         // TODO: 2017/8/2 what if two class has the same name
-        String insertText = splitText + psiClass.getName() + " " + generateName
+        if (info != null) {
+            insertText += splitText + "if (" + info.getParamName() + " == null) { return null;}";
+        } else {
+            insertText += splitText;
+        }
+        insertText += psiClass.getName() + " " + generateName
                 + " = new " + psiClass.getName() + "();";
         if (info == null) {
             insertText += generateStringForNoParam(generateName, methods,
